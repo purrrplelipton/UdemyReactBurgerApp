@@ -1,11 +1,17 @@
-import './App.css';
+import React from "react";
 
-function App() {
+import Layout from "./components/Layout/Layout";
+import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
+
+const App = () => {
+
   return (
-    <div className="App">
-      <h1>react is fun</h1>
+    <div>
+      <Layout>
+        <BurgerBuilder />
+      </Layout>
     </div>
   );
-}
+};
 
 export default App;
