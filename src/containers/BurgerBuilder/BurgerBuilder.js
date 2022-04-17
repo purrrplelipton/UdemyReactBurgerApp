@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Aux from "../../hoc/Auxiliary";
 import Burger from "../../components/Burger/Burger";
@@ -21,21 +21,32 @@ const BurgerBuilder = (props) => {
             meat: 0
         },
         totalPrice: 4.65,
-        purchasable: false
+        purchasable: true
     });
 
+    // useEffect(() => {
+    //     let totalCount = Object.values(
+    //             state.contents
+    //         ).reduce((acc, curr) => (acc + curr), 0);
+
+    //     setState(prevState => ({
+    //         ...prevState,
+    //         purchasable: !totalCount > 0 
+    //     }));
+    //     return () => {
+            
+    //     };
+    // }, [state.contents]);
+
     const updatePurchaseState = (contents) => {
-        const sum = Object.keys(contents)
-            .map(
-                cntntKey => contents[cntntKey]
-            ).reduce(
-                (acc, curr) => acc + curr
-            , 0);
+        const sum = Object.values(
+                contents
+            ).reduce((acc, curr) => (acc + curr), 0);
+        
         setState(prevState => ({
             ...prevState,
-            purchasable: sum > 0
+            purchasable: !sum > 0
         }));
-        console.log(state.purchasable)
     };
 
     const addContentHndlr = (type) => {
@@ -46,32 +57,27 @@ const BurgerBuilder = (props) => {
         const priceAddition = CONTENT_PRICES[type];
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice + priceAddition;
-        setState(state => {
-            return ({
-                ...state,
-                totalPrice: newPrice,
-                contents: updatedContents
-            });
-        });
+        setState(state => ({
+            ...state,
+            totalPrice: newPrice,
+            contents: updatedContents
+        }));
         updatePurchaseState(updatedContents);
     };
 
     const removeContentHndlr = (type) => {
         const oldCount = state.contents[type];
-        if(oldCount <= 0) return;
-        const updatedCount = oldCount - 1;
+        const updatedCount = oldCount > 0 ? oldCount - 1 : 0;
         const updatedContents = {...state.contents};
         updatedContents[type] = updatedCount;
         const priceDeduction = CONTENT_PRICES[type];
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice - priceDeduction;
-        setState(state => {
-            return ({
-                ...state,
-                totalPrice: newPrice,
-                contents: updatedContents
-            });
-        });
+        setState(state => ({
+            ...state,
+            totalPrice: newPrice,
+            contents: updatedContents
+        }));
         updatePurchaseState(updatedContents);
     };
 
