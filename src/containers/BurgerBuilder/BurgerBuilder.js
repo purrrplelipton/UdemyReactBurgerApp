@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 
 import Aux from "../../hoc/Auxiliary";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import { useState } from "react";
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 
 const CONTENT_PRICES = {
     salad: 2.15,
@@ -21,7 +23,8 @@ const BurgerBuilder = (props) => {
             meat: 0
         },
         totalPrice: 4.65,
-        purchasable: true
+        purchasable: true,
+        purchasing: false
     });
 
     // useEffect(() => {
@@ -81,6 +84,31 @@ const BurgerBuilder = (props) => {
         updatePurchaseState(updatedContents);
     };
 
+    const purchaseHandler = () => {
+        setState(prevState => ({
+            ...prevState,
+            purchasing: !prevState.purchasing
+        }));
+    };
+
+    const closeModal = () => {
+        setState(prevState => ({
+            ...prevState,
+            purchasing: !prevState.purchasing
+        }))
+    };
+
+    const cancelPurchase = () => {
+        setState(prevState => ({
+            ...prevState,
+            purchasing: false
+        }));
+    };
+
+    const continuePurchase = () => {
+        alert("You Opted To Continue Purchase");
+    };
+
     const disabledInfo = {...state.contents};
     for(const key in disabledInfo) {
         disabledInfo[key] = disabledInfo[key] <= 0;
@@ -88,13 +116,25 @@ const BurgerBuilder = (props) => {
 
     return (
         <Aux>
+            <Modal
+                show={state.purchasing}
+                closeModal={closeModal}
+            >
+                <OrderSummary
+                    contents={state.contents}
+                    price={state.totalPrice}
+                    cancelPurchase={cancelPurchase}
+                    continuePurchase={continuePurchase}
+                />
+            </Modal>
             <Burger contents={state.contents} />
             <BuildControls
                 contentAdded={addContentHndlr}
                 contentRemoved={removeContentHndlr}
                 disabled={disabledInfo}
-                price={state.totalPrice}
                 purchasable={state.purchasable}
+                ordered={purchaseHandler}
+                price={state.totalPrice}
             />
         </Aux>
     );
