@@ -27,20 +27,6 @@ const BurgerBuilder = (props) => {
         purchasing: false
     });
 
-    // useEffect(() => {
-    //     let totalCount = Object.values(
-    //             state.contents
-    //         ).reduce((acc, curr) => (acc + curr), 0);
-
-    //     setState(prevState => ({
-    //         ...prevState,
-    //         purchasable: !totalCount > 0 
-    //     }));
-    //     return () => {
-            
-    //     };
-    // }, [state.contents]);
-
     const updatePurchaseState = (contents) => {
         const sum = Object.values(
                 contents
